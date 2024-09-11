@@ -4,26 +4,36 @@ Class {
 	#instVars : [
 		'tasks'
 	],
-	#classInstVars : [
-		'uniqueInstance'
-	],
 	#category : #MyTask
 }
 
 { #category : #accessing }
 MTHome class >> current [
-"answer the instance of the TBRepository"
-^ uniqueInstance ifNil: [ uniqueInstance := self new ]
+^ self selectAll
+ifNotEmpty: [ :x | x anyOne ]
+ifEmpty: [ self new save ]
 ]
 
-{ #category : #comparing }
+{ #category : #'class initialization' }
 MTHome class >> initialize [
 self reset
 ]
 
 { #category : #initialization }
+MTHome class >> initializeVoyageOnMemoryDB [
+VOMemoryRepository new enableSingleton
+]
+
+{ #category : #initialization }
 MTHome class >> reset [
-uniqueInstance := nil
+self initializeVoyageOnMemoryDB
+]
+
+{ #category : #'as yet unclassified' }
+MTHome class >> sVoyageRoot [
+"Indicates that instances of this class are top level documents
+in noSQL databases"
+^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -49,7 +59,8 @@ tasks := OrderedCollection new
 
 { #category : #removing }
 MTHome >> removeAllTasks [
-tasks := OrderedCollection new
+tasks := OrderedCollection new.
+self save.
 ]
 
 { #category : #accessing }
@@ -58,13 +69,14 @@ MTHome >> size [
 ]
 
 { #category : #writing }
-MTHome >> writeBlogPost: aPost [
-	"Add the blog post to the list of posts."
-	tasks add: aPost
-]
-
-{ #category : #writing }
 MTHome >> writeHomeTask: aTask [
 	"Add the blog post to the list of posts."
 	tasks add: aTask
+]
+
+{ #category : #writing }
+MTHome >> writeTask: aTask [
+"Write the blog post in database"
+self allHomeTasks add: aTask.
+self save
 ]
