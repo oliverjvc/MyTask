@@ -7,6 +7,17 @@ Class {
 	#category : #MyTask
 }
 
+{ #category : #'as yet unclassified' }
+MTHome class >> createDemoTasks [
+self current
+writeHomeTask: ((MTTask  title: 'title' text:
+'text.' category:
+'P1') visible: true);
+writeHomeTask: ((MTTask title: 'title2' text:
+'text2'
+category: 'p2') visible: true)
+]
+
 { #category : #accessing }
 MTHome class >> current [
 ^ self selectAll

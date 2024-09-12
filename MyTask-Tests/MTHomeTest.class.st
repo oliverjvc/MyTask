@@ -4,25 +4,27 @@ Class {
 	#instVars : [
 		'home',
 		'task',
-		'first'
+		'first',
+		'previousRepository'
 	],
 	#category : #'MyTask-Tests'
 }
 
 { #category : #running }
 MTHomeTest >> setUp [
+previousRepository := VORepository current.
+VORepository setRepository: VOMemoryRepository new.
 home := MTHome current.
-home removeAllPosts.
 first := MTTask title: 'A title' text: 'A text' category: 'First
 Category'.
-home writeBlogPost: first.
+home writeHomeTask: first.
 task := (MTTask title: 'Another title' text: 'Another text'
 category: 'Second Category') beVisible
 ]
 
 { #category : #running }
 MTHomeTest >> tearDown [
-MTHome reset
+VORepository setRepository: previousRepository
 ]
 
 { #category : #tests }
